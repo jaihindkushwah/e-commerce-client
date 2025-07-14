@@ -52,4 +52,5 @@ export default tseslint.config({
   },
 })
 ```
-"# e-commerce-client" 
+
+"# e-commerce-client"

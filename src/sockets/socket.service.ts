@@ -15,7 +15,7 @@ export class SocketService {
       secure: false, // Set to true if your server uses HTTPS
       withCredentials: true,
       auth: {
-        auth:"Welcome"
+        token:"Welcome"
       },
       extraHeaders: {
         Authorization: `Bearer ${token}`,
