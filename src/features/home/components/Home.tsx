@@ -1,13 +1,7 @@
-import { Header } from "./Header";
 export default function Home() {
   return (
-    <div className="min-w-screen min-h-screen  text-white">
-      <Header
-        isAuthenticated={true}
-        onSignOut={() => {}}
-        user={{ name: "admin" }}
-        role={"customer"}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <span>Home</span>
     </div>
   );
 }

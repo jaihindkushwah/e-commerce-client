@@ -70,13 +70,13 @@ export function Header({
     ],
     admin: [
       {
-        name: "Dashboard",
+        name: "All Orders",
         path: "/admin",
         icon: <ShieldUser className="h-4 w-4" />,
       },
       {
-        name: "Users",
-        path: "/admin/users",
+        name: "All Partners",
+        path: "/admin/partners",
         icon: <Users className="h-4 w-4" />,
       },
     ],

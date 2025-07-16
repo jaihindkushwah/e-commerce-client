@@ -4,7 +4,6 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
-  // InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 function VerifyOtp() {
