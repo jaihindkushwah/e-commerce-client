@@ -1,26 +1,55 @@
 import { useRoutes, type RouteObject } from "react-router-dom";
+// import { Home } from "./features/home";
+import CartPage from "./features/cart/cart";
+import Login from "./features/auth/Login";
+import Register from "./features/auth/Register";
+import VerifyOtp from "./features/auth/EmailVerification";
+import ResetPassword from "./features/auth/ResetPassword";
+import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./components/NotFound";
 import { Home } from "./features/home";
 
 function AppRouter() {
   const routes: RouteObject[] = [
     {
       path: "/",
-      element: <Home />,
-    },{
-      path:"/login",
-      element: <h1>login</h1>
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: "/",
+          element: <Home />,
+        },
+        {
+          path: "/cart",
+          element: <CartPage />,
+        },
+        {
+          path: "/checkout",
+          element: <h1>checkout</h1>,
+        },
+      ],
     },
     {
-      path:"/register",
-      element: <h1>register</h1>
+      path: "/login",
+      element: <Login />,
     },
     {
-      path:"/cart",
-      element: <h1>cart</h1>
-    },{
-      path:"/checkout",
-      element: <h1>checkout</h1>
-    }
+      path: "/register",
+      element: <Register />,
+    },
+
+    {
+      path: "/verify-email",
+      element: <VerifyOtp />,
+    },
+    {
+      path: "/reset-password",
+      element: <ResetPassword />,
+    },
+    {
+      path: "*",
+      element: <NotFound />,
+    },
   ];
 
   return useRoutes(routes);

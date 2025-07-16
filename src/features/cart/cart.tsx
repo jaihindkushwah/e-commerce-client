@@ -45,7 +45,7 @@ export default function CartPage() {
     setCartItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, quantity } : item))
     );
-    socketService.emitCartUpdate({ id, quantity });
+    // socketService.emitCartUpdate({ id, quantity });
   };
 
   const removeItem = (id: number) => {

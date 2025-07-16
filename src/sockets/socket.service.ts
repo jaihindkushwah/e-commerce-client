@@ -1,5 +1,5 @@
 import { io, Socket } from "socket.io-client";
-const socketUrl = import.meta.env.VITE_SOCKET_URL ?? "http://localhost:8000/ws/api/v1/cart"; // Change this to your server URL
+const socketUrl = import.meta.env.VITE_SOCKET_URL ?? "http://localhost:8000";
 
 
 export class SocketService {
