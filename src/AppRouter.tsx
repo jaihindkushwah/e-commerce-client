@@ -24,7 +24,7 @@ function AppRouter() {
       path: "/",
       element: (
         <AppContainer>
-          <ProtectedRoute allowedRoles={["admin", "partner", "customer"]} />
+          <ProtectedRoute allowedRoles={[ "customer"]} />
         </AppContainer>
       ),
       children: [
@@ -49,8 +49,8 @@ function AppRouter() {
         </AppContainer>
       ),
       children: [
-        { path: "/admin/orders", element: <h1>All Orders</h1> },
-        { path: "/admin/partners", element: <h1>Partner Management</h1> },
+        { path: "/admin/orders", element: <h1 className="bg-black">All Orders</h1> },
+        { path: "/admin/partners", element: <h1 className="bg-black">Partner Management</h1> },
       ],
     },
     // Partner routes

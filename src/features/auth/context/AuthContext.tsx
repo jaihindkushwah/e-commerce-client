@@ -1,6 +1,8 @@
 import type { IAuthContextType, IUser } from "@/@types/auth";
+import { clearDataFromSessionStorage, } from "@/lib/utils";
 import { authService } from "@/services/auth.service";
 import { createContext, useCallback, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 export const AuthContext = createContext<IAuthContextType>(
   {} as IAuthContextType
@@ -18,17 +20,17 @@ export function AuthContextProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const navigate=useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<IUser | null>(null);
   const [inputUser, setInputUser] = useState<Partial<IUser>| null>(null);
-
   const handleLogin = useCallback(
     async(user: Partial<IUser>) => {
       try {
         const data=await authService.login(user);
         console.log(data);
         setIsAuthenticated(true);
-        setInputUser(user as IUser);
+        navigate("/");
       } catch (error:any) {
         console.log(error);
         if(error?.data?.message?.error){
@@ -40,7 +42,7 @@ export function AuthContextProvider({
         
       }
     },
-    [inputUser]
+    []
   );
   const handleRegister = useCallback(
     async(user: Partial<IUser>) => {
@@ -48,7 +50,8 @@ export function AuthContextProvider({
         const data=await authService.register(user);
         console.log(data);
         setIsAuthenticated(true);
-        setInputUser(user as IUser);
+        setIsAuthenticated(true);
+        navigate("/");
       } catch (error:any) {
         console.log(error);
         if(error?.data?.message?.error){
@@ -60,20 +63,19 @@ export function AuthContextProvider({
         
       }
     },
-    [inputUser]
+    []
   );
 
   const handleLogout = useCallback(() => {
-   try {
-     
-   } catch (error) {
-    
-   }
-  }, [inputUser]);
+    clearDataFromSessionStorage("token");
+    setUser(null);
+    setIsAuthenticated(false);
+    navigate("/");
+  }, []);
 
   const handleResetPassword = useCallback((email: string) => {
     console.log(email);
-  }, [inputUser]);
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -86,6 +88,8 @@ export function AuthContextProvider({
         handleRegister,
         handleLogout,
         handleResetPassword,
+        inputUser,
+        setInputUser
       }}
     >
       {children}

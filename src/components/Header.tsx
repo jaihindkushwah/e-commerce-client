@@ -71,7 +71,7 @@ export function Header({
     admin: [
       {
         name: "All Orders",
-        path: "/admin",
+        path: "/admin/orders",
         icon: <ShieldUser className="h-4 w-4" />,
       },
       {
@@ -83,12 +83,11 @@ export function Header({
   };
 
   const getInitials = (name: string) => {
-    return name
-      .split(" ")
+    return name?.split(" ")
       .map((n) => n[0])
       .join("")
       .toUpperCase()
-      .slice(0, 2);
+      .slice(0, 2) ||"ABC";
   };
 
   return (

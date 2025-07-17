@@ -17,5 +17,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 export function decodeJwt(token: string) {
+  if(!token) return
   return jwtDecode(token);
 }

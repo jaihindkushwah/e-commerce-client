@@ -23,6 +23,7 @@ export class AuthService {
   }
 
   async register(userData: Partial<IUser>) {
+    userData.role = userData.role || "customer";
     if(!userData.email || !userData.password || !userData.name || !userData.role){
         throw new Error("Email, password, role and name are required");
     }
