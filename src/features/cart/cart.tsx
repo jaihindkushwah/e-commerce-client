@@ -7,7 +7,7 @@ import type { CartItem, Product } from "./types";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorMessage from "./components/ErrorMessage";
 import EmptyCart from "./components/EmptyCart";
-import { socketService } from "../../sockets/socket.service";
+import { socketService } from "../../services/sockets/socket.service";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
