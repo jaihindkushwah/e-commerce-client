@@ -14,8 +14,8 @@ export class AuthService {
   }
 
   async login(credentials: Partial<IUser>) {
-    if(!credentials.email || !credentials.password){
-        throw new Error("Email and password are required");
+    if(!credentials.email || !credentials.password || !credentials.role){
+        throw new Error("Email, password and role are required");
     }
     const res = await this.axiosInstance.post("/auth/login", credentials);
     setDataToSessionStorage("token", res.data.data);

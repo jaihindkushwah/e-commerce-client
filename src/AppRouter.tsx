@@ -8,13 +8,12 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 import ProductCatalog from "./features/products/ProductCatalog";
 import { RoleRedirect } from "./components/RoleRedirect";
-
+import SingleProduct from "./features/products/SingleProduct";
+import CustomerOrderHistory from "./features/orders/CustomerOrderHistory";
 
 const AppContainer = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="max-w-screen min-h-screen  text-white">
-      {children}
-    </div>
+    <div className="max-w-screen min-h-screen  text-white">{children}</div>
   );
 };
 
@@ -24,7 +23,7 @@ function AppRouter() {
       path: "/",
       element: (
         <AppContainer>
-          <ProtectedRoute allowedRoles={[ "customer"]} />
+          <ProtectedRoute allowedRoles={["customer"]} />
         </AppContainer>
       ),
       children: [
@@ -33,10 +32,11 @@ function AppRouter() {
           element: <RoleRedirect />,
         },
         { path: "/products", element: <ProductCatalog /> },
+        { path: "/products/:id", element: <SingleProduct /> },
         { path: "/cart", element: <CartPage /> },
         { path: "/checkout", element: <h1>Checkout</h1> },
         { path: "/profile", element: <h1>Profile</h1> },
-        { path: "/orders", element: <h1>Orders</h1> },
+        { path: "/order-history", element: <CustomerOrderHistory /> },
       ],
     },
 
@@ -49,8 +49,14 @@ function AppRouter() {
         </AppContainer>
       ),
       children: [
-        { path: "/admin/orders", element: <h1 className="bg-black">All Orders</h1> },
-        { path: "/admin/partners", element: <h1 className="bg-black">Partner Management</h1> },
+        {
+          path: "/admin/orders",
+          element: <h1 className="bg-black">All Orders</h1>,
+        },
+        {
+          path: "/admin/partners",
+          element: <h1 className="bg-black">Partner Management</h1>,
+        },
       ],
     },
     // Partner routes

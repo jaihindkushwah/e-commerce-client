@@ -1,5 +1,5 @@
 import type { IAuthContextType, IUser } from "@/@types/auth";
-import { clearDataFromSessionStorage, } from "@/lib/utils";
+import { clearDataFromSessionStorage } from "@/lib/utils";
 import { authService } from "@/services/auth.service";
 import { createContext, useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -20,50 +20,46 @@ export function AuthContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<IUser | null>(null);
-  const [inputUser, setInputUser] = useState<Partial<IUser>| null>(null);
+  const [inputUser, setInputUser] = useState<Partial<IUser> | null>(null);
   const handleLogin = useCallback(
-    async(user: Partial<IUser>) => {
+    async (user: Partial<IUser>) => {
       try {
-        const data=await authService.login(user);
+        console.log(user);
+        const data = await authService.login(user);
         console.log(data);
         setIsAuthenticated(true);
         navigate("/");
-      } catch (error:any) {
+      } catch (error: any) {
         console.log(error);
-        if(error?.data?.message?.error){
-          toast.error(error.data.message.error);
-        }
-        else{
+        if (error?.response?.data?.error) {
+          toast.error(error.response.data.error);
+        } else {
           toast.error(error.message);
         }
-        
       }
     },
-    []
+    [navigate]
   );
   const handleRegister = useCallback(
-    async(user: Partial<IUser>) => {
+    async (user: Partial<IUser>) => {
       try {
-        const data=await authService.register(user);
+        const data = await authService.register(user);
         console.log(data);
         setIsAuthenticated(true);
         setIsAuthenticated(true);
         navigate("/");
-      } catch (error:any) {
-        console.log(error);
-        if(error?.data?.message?.error){
-          toast.error(error.data.message.error);
-        }
-        else{
+      } catch (error: any) {
+        if (error?.response?.data?.error) {
+          toast.error(error.response.data.error);
+        } else {
           toast.error(error.message);
         }
-        
       }
     },
-    []
+    [navigate]
   );
 
   const handleLogout = useCallback(() => {
@@ -71,7 +67,7 @@ export function AuthContextProvider({
     setUser(null);
     setIsAuthenticated(false);
     navigate("/");
-  }, []);
+  }, [navigate]);
 
   const handleResetPassword = useCallback((email: string) => {
     console.log(email);
@@ -89,7 +85,7 @@ export function AuthContextProvider({
         handleLogout,
         handleResetPassword,
         inputUser,
-        setInputUser
+        setInputUser,
       }}
     >
       {children}

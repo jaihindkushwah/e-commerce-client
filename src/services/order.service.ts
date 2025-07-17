@@ -1,10 +1,10 @@
-import type { IProduct } from "@/@types/product";
+import type { IOrder } from "@/@types/order";
 import { API_BASE_URL } from "@/lib/config";
 import { getDataFromSessionStorage } from "@/lib/utils";
 import type { AxiosInstance } from "axios";
 import axios from "axios";
 
-export class ProductService {
+export class OrderService {
   private axiosInstance!: AxiosInstance;
   constructor() {
     const token = getDataFromSessionStorage("token");
@@ -15,13 +15,9 @@ export class ProductService {
       },
     });
   }
-  async getAllProducts(): Promise<IProduct[] | []> {
-    const res = await this.axiosInstance.get("/customer/products");
-    return res.data?.data;
-  }
-  async getProductById(id: string): Promise<IProduct | null> {
-    const res = await this.axiosInstance.get(`/customer/products/${id}`);
+  async getMyOrders(): Promise<IOrder[] | []> {
+    const res = await this.axiosInstance.get("/customer/orders");
     return res.data?.data;
   }
 }
-export const productService = new ProductService();
+export const orderService = new OrderService();

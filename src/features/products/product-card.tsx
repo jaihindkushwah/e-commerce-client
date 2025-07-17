@@ -1,26 +1,43 @@
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import type { IProduct } from "@/@types/product";
+import { useNavigate } from "react-router-dom";
 
-function ProductCard({ product }: { product: any }) {
+function ProductCard({ product }: { product: IProduct }) {
+  const navigate = useNavigate();
+  const handleClick = () => navigate(`/products/${product._id}`);
   return (
-    <Card className="flex flex-col justify-between">
-      <CardHeader className="flex items-center justify-center p-4">
-        <img
-          src={product.image}
-          alt={product.title}
-          className="object-contain h-40 w-40"
-        />
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <h2 className="text-sm font-semibold line-clamp-2">{product.title}</h2>
-        <p className="text-xs text-muted-foreground line-clamp-3">{product.description}</p>
-        <p className="text-base font-bold">${product.price}</p>
-      </CardContent>
-      <CardFooter className="flex gap-2">
-        <Button size="sm">Buy Now</Button>
-        <Button size="sm" variant="outline">Add to Cart</Button>
-      </CardFooter>
-    </Card>
+    <div onClick={handleClick} className="cursor-pointer">
+      <Card className="flex flex-col justify-between">
+        <CardHeader className="flex items-center justify-center p-4">
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="object-contain h-40 w-40"
+          />
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <h2 className="text-sm font-semibold line-clamp-2">{product.name}</h2>
+          <p className="text-xs text-muted-foreground line-clamp-3">
+            {product.description}
+          </p>
+          <p className="text-base font-bold">${product.price}</p>
+        </CardContent>
+        <CardFooter className="flex gap-2">
+          <Button size="sm" onClick={handleClick}>
+            Buy Now
+          </Button>
+          <Button size="sm" variant="outline">
+            Add to Cart
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }
 

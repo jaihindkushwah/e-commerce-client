@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
 import ProductSkeleton from "./product-skeleton";
 import ProductCard from "./product-card";
+import { productService } from "@/services/product.service";
+import type { IProduct } from "@/@types/product";
 
 function ProductCatalog() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
 
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
         setLoading(true);
-        const res = await fetch("https://fakestoreapi.com/products");
-        const data = await res.json();
+        const data = await productService.getAllProducts();
         setProducts(data);
       } catch {
         setError("Failed to load products.");
       } finally {
-        setTimeout(() => setLoading(false), 1500); // Simulate delay
+        setTimeout(() => setLoading(false), 3000); // Simulate delay
       }
     };
     fetchCartItems();
@@ -36,8 +37,8 @@ function ProductCatalog() {
           ))}
 
         {!loading &&
-          products.map((product: any) => (
-            <ProductCard key={product.id} product={product} />
+          products.map((product) => (
+            <ProductCard key={product._id} product={product} />
           ))}
       </div>
     </div>
