@@ -1,5 +1,5 @@
+import { WS_BASE_URL } from "@/lib/config";
 import { io, Socket } from "socket.io-client";
-const socketUrl = import.meta.env.VITE_SOCKET_URL ?? "http://localhost:8000";
 
 
 export class SocketService {
@@ -9,7 +9,7 @@ export class SocketService {
    * Setup socket connection with optional JWT token
    */
   setupConnections(token?: string): void {
-    this.socket = io(socketUrl, {
+    this.socket = io(WS_BASE_URL, {
       transports: ["websocket"],
       secure: false, // Set to true if your server uses HTTPS
       withCredentials: true,

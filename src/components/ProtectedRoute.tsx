@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
-import { Header } from "@/features/home";
-import { getUserFromStorage } from "@/lib/utils";
+import { getDataFromSessionStorage } from "@/lib/utils";
+import { Header } from "./Header";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
 
 interface ProtectedRouteProps {
   allowedRoles?: string[];
@@ -10,15 +11,11 @@ interface ProtectedRouteProps {
 function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { user, setUser ,handleLogout} = useAuthContext();
 
   useEffect(() => {
-    const storedUser = getUserFromStorage() || {
-      role: "partner",
-      name: "admin",
-    };
+    const storedUser = getDataFromSessionStorage("user");
     const token = localStorage.getItem("token") || "adminsdadsa";
 
     if (!token || !storedUser) {
@@ -38,10 +35,7 @@ function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
     <>
       <Header
         isAuthenticated={true}
-        onSignOut={() => {
-          localStorage.clear();
-          // navigate("/login");
-        }}
+        onSignOut={handleLogout}
         user={{ name: user.name }}
         role={user.role}
       />

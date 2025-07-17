@@ -1,5 +1,4 @@
 import { useRoutes, type RouteObject } from "react-router-dom";
-// import { Home } from "./features/home";
 import CartPage from "./features/cart/cart";
 import Login from "./features/auth/Login";
 import Register from "./features/auth/Register";
@@ -8,29 +7,7 @@ import ResetPassword from "./features/auth/ResetPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 import ProductCatalog from "./features/products/ProductCatalog";
-import { Navigate } from "react-router-dom";
-
-function RoleRedirect() {
-  const { user, isAuthenticated } =  {user: {role: "partner", name: "admin"}, isAuthenticated: true}//useAuth();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  switch (user?.role) {
-    case "admin":
-      return <Navigate to="/admin/orders" replace />;
-    case "partner":
-      return <Navigate to="/partner/dashboard" replace />;
-    case "customer":
-      return <Navigate to="/products" replace />;
-    default:
-      return <Navigate to="/login" replace />;
-  }
-}
-
-// export default RoleRedirect;
-
+import { RoleRedirect } from "./components/RoleRedirect";
 
 
 const AppContainer = ({ children }: { children: React.ReactNode }) => {
