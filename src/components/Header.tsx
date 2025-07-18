@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
+import { useCartContext } from "@/features/cart/context/CartContext";
 
 interface HeaderProps {
   role?: "customer" | "partner" | "admin";
@@ -37,18 +38,28 @@ export function Header({
   onSignOut,
   user,
 }: HeaderProps) {
+  const { cartData } = useCartContext();
   const navLinks = {
     customer: [
       { name: "Home", path: "/", icon: <Home className="h-4 w-4" /> },
       {
-        name: "Order History",
-        path: "/order-history",
+        name: "Products",
+        path: "/products",
         icon: <ShoppingBag className="h-4 w-4" />,
       },
       {
         name: "Cart",
         path: "/cart",
-        icon: <ShoppingCart className="h-4 w-4" />,
+        icon: (
+          <div className="relative">
+            <ShoppingCart className="h-4 w-4" />
+            {cartData?.items && cartData?.items?.length > 0 && (
+              <span className="absolute -top-3 left-2 text-[9px] bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                {cartData?.items?.length}
+              </span>
+            )}
+          </div>
+        ),
       },
     ],
     partner: [

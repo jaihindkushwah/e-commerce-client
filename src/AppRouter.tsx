@@ -10,6 +10,7 @@ import ProductCatalog from "./features/products/ProductCatalog";
 import { RoleRedirect } from "./components/RoleRedirect";
 import SingleProduct from "./features/products/SingleProduct";
 import CustomerOrderHistory from "./features/orders/CustomerOrderHistory";
+import AllOrdersForAdmin from "./features/orders/AllOrders";
 
 const AppContainer = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -51,7 +52,7 @@ function AppRouter() {
       children: [
         {
           path: "/admin/orders",
-          element: <h1 className="bg-black">All Orders</h1>,
+          element:<AllOrdersForAdmin/>,
         },
         {
           path: "/admin/partners",

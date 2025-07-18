@@ -1,20 +1,19 @@
-import { WS_BASE_URL } from "@/lib/config";
-import { io, Socket } from "socket.io-client";
 
+import { WS_BASE_URL } from "@/lib/config";
+import { getDataFromSessionStorage } from "@/lib/utils";
+import { io, Socket } from "socket.io-client";
 
 export class SocketService {
   public socket!: Socket;
 
-  /**
-   * Setup socket connection with optional JWT token
-   */
-  setupConnections(token?: string): void {
+  setupConnections(): void {
+    const token = getDataFromSessionStorage("token");
     this.socket = io(WS_BASE_URL, {
       transports: ["websocket"],
-      secure: false, // Set to true if your server uses HTTPS
+      secure: false,
       withCredentials: true,
       auth: {
-        token:"Welcome"
+        token: token,
       },
       extraHeaders: {
         Authorization: `Bearer ${token}`,
@@ -28,9 +27,6 @@ export class SocketService {
     this.registerDefaultEvents();
   }
 
-  /**
-   * Register default connection-related events
-   */
   private registerDefaultEvents(): void {
     this.socket.on("connect", () => {
       console.log("✅ Socket connected:", this.socket.id);
@@ -45,9 +41,6 @@ export class SocketService {
     });
   }
 
-  /**
-   * Custom business events related to your app (like cart updates)
-   */
   socketConnectionEvents(): void {
     this.socket.on("cart:update", (data) => {
       console.log("🛒 Cart update received:", data);
@@ -57,10 +50,21 @@ export class SocketService {
       console.log("📢 Cart broadcast received:", data);
     });
   }
+  emitAddToCart(data:{productId: string, quantity: number}): void {
+    if (this.socket?.connected) {
+      this.socket.emit("addToCart", data);
+    } else {
+      console.warn("⚠️ Socket not connected. Cannot emit cart broadcast.");
+    }
+  }
+  emitRemoveFromCart(data:{productId: string,cartId: string}): void {
+    if (this.socket?.connected) {
+      this.socket.emit("removeFromCart", data);
+    } else {
+      console.warn("⚠️ Socket not connected. Cannot emit cart broadcast.");
+    }
+  }
 
-  /**
-   * Emit cart update event
-   */
   emitCartUpdate(cart: unknown): void {
     if (this.socket?.connected) {
       this.socket.emit("addToCart", cart);
@@ -69,9 +73,6 @@ export class SocketService {
     }
   }
 
-  /**
-   * Gracefully disconnect socket
-   */
   disconnect(): void {
     if (this.socket) {
       this.socket.removeAllListeners();
@@ -81,5 +82,4 @@ export class SocketService {
   }
 }
 
-// Export singleton instance
 export const socketService = new SocketService();

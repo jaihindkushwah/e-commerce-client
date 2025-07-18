@@ -1,12 +1,15 @@
+import type { ICart } from "@/@types/cart";
 import type { IProduct } from "@/@types/product"; // adjust path as needed
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cartService } from "@/services/cart.service";
 import { productService } from "@/services/product.service";
+import { socketService } from "@/services/sockets/socket.service";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useCartContext } from "../cart/context/CartContext";
 
-function SingleProduct() {
+export default function SingleProduct() {
+  const {setCartData}=useCartContext();
   const [product, setProduct] = useState<
     (IProduct & { isInCart?: boolean }) | null
   >(null);
@@ -22,10 +25,23 @@ function SingleProduct() {
     };
     fetchProduct();
   }, [id]);
-  const addToCart = useCallback(async () => {
+
+  useEffect(() => {
+    const handleUpdatedCart = (data:ICart) => {
+      setCartData(data);
+      const inTheCart = data.items.map((item) => item.productId).includes(id);
+      setProduct((prev) =>
+        prev ? { ...prev, isInCart: inTheCart } : prev
+      );
+    };
+    socketService.socket.on("updatedCartData", handleUpdatedCart);
+    return () => {
+      socketService.socket.off("updatedCartData", handleUpdatedCart);
+    };
+  }, [id]);
+  const addToCart = useCallback(() => {
     try {
-      const data = await cartService.addToCart({ productId: id, quantity: 1 });
-      console.log(data);
+      socketService.emitAddToCart({ productId: id, quantity: 1 });
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
@@ -34,6 +50,7 @@ function SingleProduct() {
   if (!product) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-2xl space-y-4">
       <div className="flex justify-self-center">
@@ -85,7 +102,7 @@ function SingleProduct() {
         }
       >
         {product.isInCart
-          ? "Already added in the Cart"
+          ? "Added in the Cart"
           : product.isAvailable
           ? "Add to Cart"
           : "Notify Me"}
@@ -93,5 +110,3 @@ function SingleProduct() {
     </div>
   );
 }
-
-export default SingleProduct;

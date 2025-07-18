@@ -5,35 +5,12 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorMessage from "./components/ErrorMessage";
 import EmptyCart from "./components/EmptyCart";
 import { useCartContext } from "./context/CartContext";
-import { useEffect, useState } from "react";
-import { cartService } from "@/services/cart.service";
-import { socketService } from "@/services/sockets/socket.service";
 
 export default function CartPage() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const { cartData, handleRemoveFromCart, handeUpdateCart, setCartData } =
+  const { cartData, handleRemoveFromCart, handeUpdateCart,error,loading } =
     useCartContext();
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        setLoading(true);
-        const data = await cartService.getCartItems();
-        setCartData(data);
-      } catch {
-        setError("Failed to load cart items.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCartItems();
-    socketService.setupConnections();
-    return () => socketService.disconnect();
-  }, [setCartData]);
 
   const updateQuantity = (id: string, quantity: number) => {
-    console.log("updateQuantity", id, quantity);
     if (quantity <= 0) {
       handleRemoveFromCart(id);
       return;

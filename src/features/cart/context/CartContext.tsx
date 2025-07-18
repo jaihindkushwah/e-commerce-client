@@ -39,31 +39,43 @@ export function CartContextProvider({ children }: any) {
 
     fetchCartItems();
     socketService.setupConnections();
-    return () => socketService.disconnect();
-  }, [setCartData]);
 
+    const handleUpdatedCart = (data: ICart) => {
+      setCartData(data);
+    }
+    socketService.socket.on("updatedCartData", handleUpdatedCart);
+    return () => {
+      socketService.socket.off("updatedCartData", handleUpdatedCart);
+      socketService.disconnect();
+    };
+  }, []);
   const handleAddToCart = (cart: ICart) => setCartData(cart);
-  const handeUpdateCart = useCallback(async (id: string, quantity: number) => {
+   const handeUpdateCart = useCallback(async (id: string, quantity: number) => {
     try {
       setLoading(true);
-      await cartService.addToCart({ productId: id, quantity });
+      socketService.emitAddToCart({ productId: id, quantity });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setError("Failed to update cart.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
+
   const handleRemoveFromCart = async (id: string) => {
     try {
       setLoading(true);
-      await cartService.removeFromCart({ productId: id, cartId: cartData._id });
+       socketService.emitRemoveFromCart({ productId: id, cartId: cartData._id });
     } catch (error) {
       console.log(error);
       setError("Failed to remove from cart.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
+
   const handleClearCart = () => setCartData({} as ICart);
+
   return (
     <CartContext.Provider
       value={{
