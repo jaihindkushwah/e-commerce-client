@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 const PromoCode = () => {
   return (
     <div className="mt-6 bg-white rounded-lg shadow-sm px-4 py-6 sm:px-6">
@@ -6,11 +8,13 @@ const PromoCode = () => {
         <input
           type="text"
           placeholder="Enter promo code"
-          className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"
+          value={"ABC20"}
+          readOnly
+          className="flex-1 border border-gray-300 text-black rounded-md px-3 py-2 text-sm"
         />
-        <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-sm font-medium">
-          Apply
-        </button>
+        <Button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-sm font-medium">
+          Applied
+        </Button>
       </div>
     </div>
   );

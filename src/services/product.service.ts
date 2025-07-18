@@ -19,7 +19,9 @@ export class ProductService {
     const res = await this.axiosInstance.get("/customer/products");
     return res.data?.data;
   }
-  async getProductById(id: string): Promise<IProduct | null> {
+  async getProductById(
+    id: string
+  ): Promise<(IProduct & { isInCart?: boolean }) | null> {
     const res = await this.axiosInstance.get(`/customer/products/${id}`);
     return res.data?.data;
   }

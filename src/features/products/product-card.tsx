@@ -19,6 +19,7 @@ function ProductCard({ product }: { product: IProduct }) {
             src={product.imageUrl}
             alt={product.name}
             className="object-contain h-40 w-40"
+            loading="lazy"
           />
         </CardHeader>
         <CardContent className="space-y-2">
@@ -29,9 +30,7 @@ function ProductCard({ product }: { product: IProduct }) {
           <p className="text-base font-bold">${product.price}</p>
         </CardContent>
         <CardFooter className="flex gap-2">
-          <Button size="sm" onClick={handleClick}>
-            Buy Now
-          </Button>
+          <Button size="sm">View Details</Button>
           <Button size="sm" variant="outline">
             Add to Cart
           </Button>

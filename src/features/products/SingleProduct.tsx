@@ -1,12 +1,15 @@
 import type { IProduct } from "@/@types/product"; // adjust path as needed
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { cartService } from "@/services/cart.service";
 import { productService } from "@/services/product.service";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 function SingleProduct() {
-  const [product, setProduct] = useState<IProduct | null>(null);
+  const [product, setProduct] = useState<
+    (IProduct & { isInCart?: boolean }) | null
+  >(null);
   const { id } = useParams() as { id: string };
   useEffect(() => {
     const fetchProduct = async () => {
@@ -19,6 +22,15 @@ function SingleProduct() {
     };
     fetchProduct();
   }, [id]);
+  const addToCart = useCallback(async () => {
+    try {
+      const data = await cartService.addToCart({ productId: id, quantity: 1 });
+      console.log(data);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  }, [id]);
+
   if (!product) {
     return <div>Loading...</div>;
   }
@@ -29,6 +41,7 @@ function SingleProduct() {
           <img
             src={product.imageUrl}
             alt={product.name}
+            loading="eager"
             className="w-fit max-h-80 object-fill rounded-xl"
           />
         )}
@@ -49,7 +62,7 @@ function SingleProduct() {
 
       <div className="flex justify-between items-center">
         <span className="text-xl font-semibold text-primary">
-          ₹ {product.price}
+          $ {product.price}
         </span>
         <span className="text-sm text-gray-500 font-medium">
           <span className="font-bold">Stock: </span>
@@ -64,8 +77,18 @@ function SingleProduct() {
         </p>
       )}
 
-      <Button className="w-full mt-4" disabled={!product.isAvailable}>
-        {product.isAvailable ? "Add to Cart" : "Notify Me"}
+      <Button
+        onClick={addToCart}
+        className="w-full mt-4"
+        disabled={
+          !product.isAvailable || product.stock === 0 || product.isInCart
+        }
+      >
+        {product.isInCart
+          ? "Already added in the Cart"
+          : product.isAvailable
+          ? "Add to Cart"
+          : "Notify Me"}
       </Button>
     </div>
   );

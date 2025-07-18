@@ -59,11 +59,16 @@ function CustomerOrderHistory() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Current Orders */}
-          <div className="bg-white rounded-lg p-6 shadow-md">
+          <div className="bg-white rounded-lg p-6 shadow-md min-h-40">
             <h2 className="text-xl font-semibold mb-4 text-black">
               Current Orders
             </h2>
             <div className="space-y-4">
+              {currentOrders.length === 0 && (
+                <p className="text-gray-600 text-center mt-10">
+                  No current orders found.
+                </p>
+              )}
               {currentOrders.map((order) => (
                 <div
                   key={order._id}
@@ -80,11 +85,16 @@ function CustomerOrderHistory() {
           </div>
 
           {/* Past Orders */}
-          <div className="bg-white rounded-lg p-6 shadow-md">
+          <div className="bg-white rounded-lg p-6 shadow-md min-h-40">
             <h2 className="text-xl font-semibold mb-4 text-black">
               Past Orders
             </h2>
             <div className="space-y-4">
+              {pastOrders.length === 0 && (
+                <p className="text-gray-600 text-center mt-10">
+                  No past orders found.
+                </p>
+              )}
               {pastOrders.map((order) => (
                 <div
                   key={order._id}
