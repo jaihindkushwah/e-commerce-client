@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   itemTotal: number;
@@ -10,6 +11,10 @@ const OrderSummary: React.FC<Props> = ({ itemTotal, itemCount }) => {
   const shipping = 5.99;
   const tax = itemTotal * 0.08;
   const total = itemTotal;
+  const navigate = useNavigate();
+  const hadndleCheckout = () => {
+    navigate("/checkout");
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-sm px-4 py-6 sm:px-6">
@@ -39,7 +44,7 @@ const OrderSummary: React.FC<Props> = ({ itemTotal, itemCount }) => {
           <p>${total.toFixed(2)}</p>
         </div>
       </div>
-      <Button className="w-full mt-6 bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700">
+      <Button onClick={hadndleCheckout} className="w-full mt-6 text-white py-3 px-4 rounded-md ">
         Proceed to Checkout
       </Button>
     </div>

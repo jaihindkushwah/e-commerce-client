@@ -22,3 +22,16 @@ export interface IOrder {
   createdAt: Date;
   updatedAt: Date;
 }
+
+
+export interface IAddress {
+  _id: string;
+  userId: string;
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+  country?: string;
+  phone: string;
+  isDefault?: boolean;
+}

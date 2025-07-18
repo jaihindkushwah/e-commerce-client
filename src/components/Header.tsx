@@ -43,8 +43,8 @@ export function Header({
     customer: [
       { name: "Home", path: "/", icon: <Home className="h-4 w-4" /> },
       {
-        name: "Products",
-        path: "/products",
+        name: "Order History",
+        path: "/order-history",
         icon: <ShoppingBag className="h-4 w-4" />,
       },
       {

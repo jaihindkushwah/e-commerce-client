@@ -11,6 +11,7 @@ import { RoleRedirect } from "./components/RoleRedirect";
 import SingleProduct from "./features/products/SingleProduct";
 import CustomerOrderHistory from "./features/orders/CustomerOrderHistory";
 import AllOrdersForAdmin from "./features/orders/AllOrders";
+import Checkout from "./features/checkout/checkout";
 
 const AppContainer = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -32,10 +33,11 @@ function AppRouter() {
           path: "/",
           element: <RoleRedirect />,
         },
+        { path: "/checkout", element: <Checkout /> },
         { path: "/products", element: <ProductCatalog /> },
         { path: "/products/:id", element: <SingleProduct /> },
         { path: "/cart", element: <CartPage /> },
-        { path: "/checkout", element: <h1>Checkout</h1> },
+        // { path: "/checkout", element: <h1>Checkout</h1> },
         { path: "/profile", element: <h1>Profile</h1> },
         { path: "/order-history", element: <CustomerOrderHistory /> },
       ],
