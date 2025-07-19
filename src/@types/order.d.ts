@@ -1,3 +1,5 @@
+import type { IProduct } from "./product";
+
 export type OrderStatus =
   | "pending"
   | "accepted"
@@ -6,23 +8,10 @@ export type OrderStatus =
   | "delivered"
   | "cancelled";
 
-export interface IOrderItem {
+export interface IOrderItem extends Optional<IProduct> {
   productId: Types.ObjectId;
   quantity: number;
 }
-
-export interface IOrder {
-  _id: Types.ObjectId;
-  customerId: Types.ObjectId;
-  deliveryPartnerId?: Types.ObjectId;
-  items: IOrderItem[];
-  status: OrderStatus;
-  deliveryAddressId: Types.ObjectId;
-  totalPrice: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 
 export interface IAddress {
   _id: string;
@@ -34,4 +23,36 @@ export interface IAddress {
   country?: string;
   phone: string;
   isDefault?: boolean;
+}
+
+export interface IOrderItem {
+  _id: string;
+  productId: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  stock: number;
+  category: string;
+  isAvailable: boolean;
+  createdAt: string;
+  updatedAt: string;
+  quantity: number;
+}
+
+export interface ICustomerInfo {
+  _id: string;
+  name: string;
+  email: string;
+}
+
+export interface IOrder {
+  _id: string;
+  items: IOrderItem[];
+  status: OrderStatus; // you can expand this
+  totalPrice: number;
+  createdAt: string;
+  updatedAt: string;
+  customerInfo: ICustomerInfo;
+  deliveryAddressInfo: IAddress;
 }

@@ -1,6 +1,5 @@
-
 import type { IOrder } from "@/@types/order";
-import { orderService } from "@/services/order.service";
+import { customerService } from "@/services/customer.service";
 import { useEffect, useState } from "react";
 
 function CustomerOrderHistory() {
@@ -12,7 +11,7 @@ function CustomerOrderHistory() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const allOrders = await orderService.getMyOrders();
+        const allOrders = await customerService.getMyOrders();
         const current = allOrders.filter(
           (order) => order.status !== "delivered"
         );

@@ -10,12 +10,15 @@ import ProductCatalog from "./features/products/ProductCatalog";
 import { RoleRedirect } from "./components/RoleRedirect";
 import SingleProduct from "./features/products/SingleProduct";
 import CustomerOrderHistory from "./features/orders/CustomerOrderHistory";
-import AllOrdersForAdmin from "./features/orders/AllOrders";
 import Checkout from "./features/checkout/checkout";
+import AdminOrders from "./features/admin/orders";
+import Partners from "./features/admin/partners";
 
 const AppContainer = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="max-w-screen min-h-screen  text-white">{children}</div>
+    <div className="max-w-screen min-h-screen  text-white mb-10">
+      {children}
+    </div>
   );
 };
 
@@ -54,11 +57,11 @@ function AppRouter() {
       children: [
         {
           path: "/admin/orders",
-          element:<AllOrdersForAdmin/>,
+          element: <AdminOrders />,
         },
         {
           path: "/admin/partners",
-          element: <h1 className="bg-black">Partner Management</h1>,
+          element: <Partners />,
         },
       ],
     },

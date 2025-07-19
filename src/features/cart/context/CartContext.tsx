@@ -1,6 +1,6 @@
 import type { ICart, ICartContextType } from "@/@types/cart";
-import { cartService } from "@/services/cart.service";
-import { socketService } from "@/services/sockets/socket.service";
+import { customerService } from "@/services/customer.service";
+import { customerSocketService } from "@/services/sockets/customer.socket.service";
 import {
   createContext,
   useCallback,
@@ -28,7 +28,7 @@ export function CartContextProvider({ children }: any) {
     const fetchCartItems = async () => {
       try {
         setLoading(true);
-        const data = await cartService.getCartItems();
+        const data = await customerService.getCartItems();
         setCartData(data);
       } catch {
         setError("Failed to load cart items.");
@@ -38,22 +38,21 @@ export function CartContextProvider({ children }: any) {
     };
 
     fetchCartItems();
-    socketService.setupConnections();
-
+    customerSocketService.setupConnections();
     const handleUpdatedCart = (data: ICart) => {
       setCartData(data);
-    }
-    socketService.socket.on("updatedCartData", handleUpdatedCart);
+    };
+    customerSocketService.socket.on("updatedCartData", handleUpdatedCart);
     return () => {
-      socketService.socket.off("updatedCartData", handleUpdatedCart);
-      socketService.disconnect();
+      customerSocketService.socket.off("updatedCartData", handleUpdatedCart);
+      customerSocketService.disconnect();
     };
   }, []);
   const handleAddToCart = (cart: ICart) => setCartData(cart);
-   const handeUpdateCart = useCallback(async (id: string, quantity: number) => {
+  const handeUpdateCart = useCallback(async (id: string, quantity: number) => {
     try {
       setLoading(true);
-      socketService.emitAddToCart({ productId: id, quantity });
+      customerSocketService.emitAddToCart({ productId: id, quantity });
     } catch (error) {
       console.error(error);
       setError("Failed to update cart.");
@@ -65,7 +64,10 @@ export function CartContextProvider({ children }: any) {
   const handleRemoveFromCart = async (id: string) => {
     try {
       setLoading(true);
-       socketService.emitRemoveFromCart({ productId: id, cartId: cartData._id });
+      customerSocketService.emitRemoveFromCart({
+        productId: id,
+        cartId: cartData._id,
+      });
     } catch (error) {
       console.log(error);
       setError("Failed to remove from cart.");

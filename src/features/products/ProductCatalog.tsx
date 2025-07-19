@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import ProductSkeleton from "./product-skeleton";
 import ProductCard from "./product-card";
-import { productService } from "@/services/product.service";
 import type { IProduct } from "@/@types/product";
+import { customerService } from "@/services/customer.service";
 
 function ProductCatalog() {
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ function ProductCatalog() {
     const fetchCartItems = async () => {
       try {
         setLoading(true);
-        const data = await productService.getAllProducts();
+        const data = await customerService.getAllProducts();
         setProducts(data);
       } catch {
         setError("Failed to load products.");

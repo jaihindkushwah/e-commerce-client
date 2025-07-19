@@ -2,14 +2,14 @@ import type { ICart } from "@/@types/cart";
 import type { IProduct } from "@/@types/product"; // adjust path as needed
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { productService } from "@/services/product.service";
-import { socketService } from "@/services/sockets/socket.service";
+import { customerSocketService } from "@/services/sockets/customer.socket.service";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCartContext } from "../cart/context/CartContext";
+import { customerService } from "@/services/customer.service";
 
 export default function SingleProduct() {
-  const {setCartData}=useCartContext();
+  const { setCartData } = useCartContext();
   const [product, setProduct] = useState<
     (IProduct & { isInCart?: boolean }) | null
   >(null);
@@ -17,7 +17,7 @@ export default function SingleProduct() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const data = await productService.getProductById(id);
+        const data = await customerService.getProductById(id);
         setProduct(data);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -27,21 +27,19 @@ export default function SingleProduct() {
   }, [id]);
 
   useEffect(() => {
-    const handleUpdatedCart = (data:ICart) => {
+    const handleUpdatedCart = (data: ICart) => {
       setCartData(data);
       const inTheCart = data.items.map((item) => item.productId).includes(id);
-      setProduct((prev) =>
-        prev ? { ...prev, isInCart: inTheCart } : prev
-      );
+      setProduct((prev) => (prev ? { ...prev, isInCart: inTheCart } : prev));
     };
-    socketService.socket.on("updatedCartData", handleUpdatedCart);
+    customerSocketService.socket.on("updatedCartData", handleUpdatedCart);
     return () => {
-      socketService.socket.off("updatedCartData", handleUpdatedCart);
+      customerSocketService.socket.off("updatedCartData", handleUpdatedCart);
     };
-  }, [id]);
+  }, [id, setCartData]);
   const addToCart = useCallback(() => {
     try {
-      socketService.emitAddToCart({ productId: id, quantity: 1 });
+      customerSocketService.emitAddToCart({ productId: id, quantity: 1 });
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
