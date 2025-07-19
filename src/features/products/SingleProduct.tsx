@@ -6,7 +6,8 @@ import { customerSocketService } from "@/services/sockets/customer.socket.servic
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useCartContext } from "../cart/context/CartContext";
-import { customerService } from "@/services/customer.service";
+import { CustomerService } from "@/services/customer.service";
+import { getDataFromSessionStorage } from "@/lib/utils";
 
 export default function SingleProduct() {
   const { setCartData } = useCartContext();
@@ -17,6 +18,7 @@ export default function SingleProduct() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+         const customerService = CustomerService.init(getDataFromSessionStorage("token"));
         const data = await customerService.getProductById(id);
         setProduct(data);
       } catch (error) {

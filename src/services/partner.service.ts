@@ -6,8 +6,7 @@ import axios from "axios";
 
 export class PartnerService{
     private axiosInstance!:AxiosInstance;
-    constructor(){
-        const token=getDataFromSessionStorage("token");
+    constructor(token:string){
         this.axiosInstance=axios.create({
             baseURL:API_BASE_URL,
             headers:{
@@ -15,6 +14,7 @@ export class PartnerService{
             }
         })
     }
+    static init(token:string){return new PartnerService(token);}
     async getMyOrders(): Promise<IOrder[] | []> {
         const res = await this.axiosInstance.get("/partner/orders");
         return res.data?.data;
@@ -29,6 +29,18 @@ export class PartnerService{
     }
     async updateStatusByProductId(data:{id:string;status:string}): Promise<IOrder[] | []> {
         const res = await this.axiosInstance.put(`/partner/orders/${data.id}`,data);
+        return res.data?.data;
+    }
+    async getUnassignedOrders(): Promise<IOrder[] | []> {
+        const res = await this.axiosInstance.get("/partner/unassigned-orders");
+        return res.data?.data;
+    }
+    async acceptOrder(orderId:string): Promise<IOrder[] | []> {
+        const res = await this.axiosInstance.post(`/partner/accept-order/${orderId}`);
+        return res.data?.data;
+    }
+    async rejectOrder(orderId:string): Promise<IOrder[] | []> {
+        const res = await this.axiosInstance.get(`/partner/reject-order/${orderId}`);
         return res.data?.data;
     }
 

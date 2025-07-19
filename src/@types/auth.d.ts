@@ -6,10 +6,12 @@ export interface IUser {
   _id: string;
   name: string;
   email: string;
+  password?: string;
   role: UserRole;
   available?: boolean;
   verfied?: boolean;
   avatarUrl?: string;
+  token?: string;
 }
 
 export interface IAuthContextType {

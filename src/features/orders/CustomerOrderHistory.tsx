@@ -1,5 +1,7 @@
 import type { IOrder } from "@/@types/order";
-import { customerService } from "@/services/customer.service";
+import OrderCard from "@/components/order-card";
+import { getDataFromSessionStorage } from "@/lib/utils";
+import { CustomerService } from "@/services/customer.service";
 import { useEffect, useState } from "react";
 
 function CustomerOrderHistory() {
@@ -11,11 +13,12 @@ function CustomerOrderHistory() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
+        const customerService = CustomerService.init(getDataFromSessionStorage("token"));
         const allOrders = await customerService.getMyOrders();
         const current = allOrders.filter(
           (order) => order.status !== "delivered"
         );
-        const past = allOrders.filter((order) => order.status === "delivered");
+        const past = allOrders.filter((order) => order.status === "delivered" || order.status === "cancelled");
         setCurrentOrders(current);
         setPastOrders(past);
       } catch (error) {
@@ -56,16 +59,7 @@ function CustomerOrderHistory() {
                 </p>
               )}
               {currentOrders.map((order) => (
-                <div
-                  key={order._id}
-                  className="border border-gray-200 rounded-lg p-4"
-                >
-                  <p className="text-gray-600">Order ID: {order._id}</p>
-                  <p className="text-gray-600">
-                    Order Date: {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-                  <p className="text-gray-600">Order Status: {order.status}</p>
-                </div>
+                <OrderCard key={order._id} order={order} />
               ))}
             </div>
           </div>
@@ -82,20 +76,7 @@ function CustomerOrderHistory() {
                 </p>
               )}
               {pastOrders.map((order) => (
-                <div
-                  key={order._id}
-                  className="border border-gray-200 rounded-lg p-4"
-                >
-                  <p className="text-gray-600">Order ID: {order._id}</p>
-                  <p className="text-gray-600">
-                    Order Date: {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-                  <p className="text-gray-600">Order Status: {order.status}</p>
-                  <p className="text-gray-600">
-                    Delivery Date:{" "}
-                    {new Date(order.updatedAt).toLocaleDateString()}
-                  </p>
-                </div>
+                <OrderCard key={order._id} order={order} />
               ))}
             </div>
           </div>

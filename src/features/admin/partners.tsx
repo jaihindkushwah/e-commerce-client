@@ -1,9 +1,10 @@
 import type { IUser } from "@/@types/auth";
-import { adminService } from "@/services/admin.service";
 import { useEffect, useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AdminService } from "@/services/admin.service";
+import { getDataFromSessionStorage } from "@/lib/utils";
 
 interface PartnerCardProps {
   partner: {
@@ -37,6 +38,7 @@ function Partners() {
   useEffect(() => {
     const fetchPartners = async () => {
       try {
+        const adminService = AdminService.init(getDataFromSessionStorage("token"));
         const data = await adminService.getAllPartners();
         setPartners(data);
       } catch (error) {

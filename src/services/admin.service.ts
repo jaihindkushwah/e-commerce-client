@@ -2,20 +2,21 @@ import type { IUser } from "@/@types/auth";
 import type { IOrder } from "@/@types/order";
 import type { IProduct } from "@/@types/product";
 import { API_BASE_URL } from "@/lib/config";
-import { getDataFromSessionStorage } from "@/lib/utils";
 import type { AxiosInstance } from "axios";
 import axios from "axios";
 
 export class AdminService {
   private axiosInstance!: AxiosInstance;
-  constructor() {
-    const token = getDataFromSessionStorage("token");
+  constructor(token:string) {
     this.axiosInstance = axios.create({
       baseURL: API_BASE_URL,
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+  }
+  static init(token: string) {
+    return new AdminService(token);
   }
   async getAllOrders(): Promise<IOrder[] | []> {
     const res = await this.axiosInstance.get("/admin/orders");
@@ -34,4 +35,3 @@ export class AdminService {
     return res.data?.data;
   }
 }
-export const adminService = new AdminService();

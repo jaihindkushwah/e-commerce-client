@@ -13,6 +13,7 @@ import CustomerOrderHistory from "./features/orders/CustomerOrderHistory";
 import Checkout from "./features/checkout/checkout";
 import AdminOrders from "./features/admin/orders";
 import Partners from "./features/admin/partners";
+import PartnerOrderHistory from "./features/partner/orders";
 
 const AppContainer = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -74,7 +75,7 @@ function AppRouter() {
         </AppContainer>
       ),
       children: [
-        { path: "/partner/dashboard", element: <h1>Partner Dashboard</h1> },
+        { path: "/partner/orders", element: <PartnerOrderHistory/> },
         { path: "/partner/products", element: <h1>Partner Products</h1> },
       ],
     },

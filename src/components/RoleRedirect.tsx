@@ -11,7 +11,7 @@ export function RoleRedirect() {
     case "admin":
       return <Navigate to="/admin/orders" replace />;
     case "partner":
-      return <Navigate to="/partner/dashboard" replace />;
+      return <Navigate to="/partner/orders" replace />;
     case "customer":
       return <Navigate to="/products" replace />;
     default:

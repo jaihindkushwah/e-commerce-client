@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useState } from "react";
 import { AddressFormModal } from "../cart/components/AddressFormModel";
 import OrderSummary from "./components/OrderSummary";
-import { customerService } from "@/services/customer.service";
 import { useNavigate } from "react-router-dom";
 import { useCartContext } from "../cart/context/CartContext";
 import { customerSocketService } from "@/services/sockets/customer.socket.service";
 import { toast } from "sonner";
+import { CustomerService } from "@/services/customer.service";
+import { getDataFromSessionStorage } from "@/lib/utils";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ function Checkout() {
 
   useEffect(() => {
     const fetchAddresses = async () => {
+       const customerService = CustomerService.init(getDataFromSessionStorage("token"));
       const res = await customerService.getCustomerAddresses();
       setAddresses(res);
     };
@@ -29,6 +31,7 @@ function Checkout() {
     async (data: Omit<IAddress, "_id" | "userId">) => {
       try {
         console.log("add address");
+         const customerService = CustomerService.init(getDataFromSessionStorage("token"));
         const res = await customerService.createAddress(data);
         console.log(res);
         setAddresses((prev) => [...prev, res]);

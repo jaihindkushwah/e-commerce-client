@@ -1,8 +1,12 @@
 import type { IOrder } from "@/@types/order";
-import { customerService } from "@/services/customer.service";
+import { getDataFromSessionStorage } from "@/lib/utils";
+import { CustomerService } from "@/services/customer.service";
+import { PartnerService } from "@/services/partner.service";
 import { useEffect, useState } from "react";
+import { useAuthContext } from "../auth/context/AuthContext";
 
-function CustomerOrderHistory() {
+function PartnerOrderHistory() {
+  const {user}=useAuthContext();
   const [currentOrders, setCurrentOrders] = useState<IOrder[]>([]);
   const [pastOrders, setPastOrders] = useState<IOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +15,8 @@ function CustomerOrderHistory() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const allOrders = await customerService.getMyOrders();
+        const partnerService = PartnerService.init(user?.token!);
+        const allOrders = await partnerService.getMyOrders();
         const current = allOrders.filter(
           (order) => order.status !== "delivered"
         );
@@ -105,4 +110,4 @@ function CustomerOrderHistory() {
   );
 }
 
-export default CustomerOrderHistory;
+export default PartnerOrderHistory;

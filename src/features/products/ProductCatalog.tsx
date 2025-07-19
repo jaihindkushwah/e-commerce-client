@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import ProductSkeleton from "./product-skeleton";
 import ProductCard from "./product-card";
 import type { IProduct } from "@/@types/product";
-import { customerService } from "@/services/customer.service";
+import { CustomerService } from "@/services/customer.service";
+import { getDataFromSessionStorage } from "@/lib/utils";
 
 function ProductCatalog() {
   const [loading, setLoading] = useState(true);
@@ -13,6 +14,7 @@ function ProductCatalog() {
     const fetchCartItems = async () => {
       try {
         setLoading(true);
+        const customerService = CustomerService.init(getDataFromSessionStorage("token"));
         const data = await customerService.getAllProducts();
         setProducts(data);
       } catch {

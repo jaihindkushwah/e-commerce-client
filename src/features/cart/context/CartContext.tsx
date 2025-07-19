@@ -1,5 +1,7 @@
 import type { ICart, ICartContextType } from "@/@types/cart";
-import { customerService } from "@/services/customer.service";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
+import { getDataFromSessionStorage } from "@/lib/utils";
+import { CustomerService } from "@/services/customer.service";
 import { customerSocketService } from "@/services/sockets/customer.socket.service";
 import {
   createContext,
@@ -20,6 +22,7 @@ export const useCartContext = () => {
 export const CartContext = createContext<ICartContextType | null>(null);
 
 export function CartContextProvider({ children }: any) {
+  const {user}=useAuthContext();
   const [cartData, setCartData] = useState<ICart>({} as ICart);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,6 +31,7 @@ export function CartContextProvider({ children }: any) {
     const fetchCartItems = async () => {
       try {
         setLoading(true);
+        const customerService = CustomerService.init(getDataFromSessionStorage("token"));
         const data = await customerService.getCartItems();
         setCartData(data);
       } catch {

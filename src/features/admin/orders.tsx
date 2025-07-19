@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import OrderCard from "./components/order-card";
+import OrderCard from "../../components/order-card";
 import type { IOrder } from "@/@types/order";
-import { adminService } from "@/services/admin.service";
+import { AdminService } from "@/services/admin.service";
+import { getDataFromSessionStorage } from "@/lib/utils";
 
 function AdminOrders() {
   const [orders, setOrders] = useState<IOrder[]>([]);
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        const adminService= AdminService.init(getDataFromSessionStorage("token"));
         const data = await adminService.getAllOrders();
         setOrders(data);
       } catch (error) {
@@ -24,7 +26,7 @@ function AdminOrders() {
           <p className="text-gray-600 text-sm">View and manage your orders</p>
         </div>
         <div className="space-y-2">
-          {orders.map((order: any) => (
+          {orders.map((order) => (
             <OrderCard key={order._id} order={order} />
           ))}
         </div>
